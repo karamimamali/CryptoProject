@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: project
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/project
+    username: root
+    password: secret
+
+  liquibase:
+    enabled: true
+    drop-first: false
+    change-log: classpath:db/changelog/changelog.yml
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      format_sql: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+
+security:
+  jwt:
+    secret-key: 149cdbe94554fad3e0c93c997a4a15a23e548e938276f56437678d15dede656b
+    expiration-time: 3600000

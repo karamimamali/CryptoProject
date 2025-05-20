@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#login-bg {
+    background: #0d2e3b;
+    background: linear-gradient(90deg, rgba(13, 46, 59, 1) 0%, rgba(7, 32, 46, 1) 64%, rgba(3, 3, 43, 1) 100%);
+}

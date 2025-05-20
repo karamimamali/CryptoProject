@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decrypt Caesar Key</title>
+    <link rel="stylesheet" href="style/output.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e293b;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            color: #1e293b;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 32rem;
+            width: 100%;
+        }
+
+        input, button, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        input[readonly] {
+            background-color: #f3f4f6;
+        }
+
+        button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .flex {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-red-500 {
+            color: #ef4444;
+        }
+
+        .text-blue-500 {
+            color: #3b82f6;
+        }
+
+        .underline {
+            text-decoration: underline;
+        }
+
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="text-2xl font-bold text-center mb-4">Caesar Key Decryption</h1>
+
+    <label for="username">Username</label>
+    <input type="text" id="username" readonly />
+
+    <label for="encryptedKey">Encrypted Caesar Key (Base64)</label>
+    <textarea id="encryptedKey" rows="3" placeholder="Paste encrypted Caesar key..."></textarea>
+
+    <button id="decryptBtn">Decrypt Key</button>
+
+    <div id="resultContainer" class="hidden">
+        <label>Your Decrypted Caesar Key</label>
+        <div class="flex">
+            <input type="text" id="decryptedKey" readonly />
+            <button type="button" id="copyBtn">Copy</button>
+        </div>
+    </div>
+
+    <div id="errorContainer" class="hidden">
+        <p class="text-red-500">Decryption failed. Check the encrypted key or private key.</p>
+    </div>
+
+    <div class="mt-6 text-center">
+        <a href="dashboard.html" class="text-blue-500 underline">Return to Dashboard</a>
+    </div>
+</div>
+
+<script>
+    async function importPrivateKey(base64Key) {
+        const binaryDer = Uint8Array.from(atob(base64Key), c => c.charCodeAt(0));
+        return await window.crypto.subtle.importKey(
+            "pkcs8",
+            binaryDer,
+            {
+                name: "RSA-OAEP",
+                hash: "SHA-256",
+            },
+            false,
+            ["decrypt"]
+        );
+    }
+
+    async function decryptRSA(encryptedBase64, privateKey) {
+        const encryptedBytes = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+        const decrypted = await window.crypto.subtle.decrypt(
+            { name: "RSA-OAEP" },
+            privateKey,
+            encryptedBytes
+        );
+        return new TextDecoder().decode(decrypted);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const decryptBtn = document.getElementById("decryptBtn");
+        const copyBtn = document.getElementById("copyBtn");
+        const usernameInput = document.getElementById("username");
+        const resultContainer = document.getElementById("resultContainer");
+        const errorContainer = document.getElementById("errorContainer");
+        const decryptedInput = document.getElementById("decryptedKey");
+
+        // Load current user
+        const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+        usernameInput.value = currentUser;
+
+        decryptBtn.addEventListener("click", async () => {
+            const username = usernameInput.value.trim();
+            const encryptedKey = document.getElementById("encryptedKey").value.trim();
+            resultContainer.classList.add("hidden");
+            errorContainer.classList.add("hidden");
+
+            if (!username || !encryptedKey) {
+                alert("Please provide both username and encrypted key.");
+                return;
+            }
+
+            const privateKeyBase64 = localStorage.getItem(`key_priv_${username}`);
+            if (!privateKeyBase64) {
+                alert("Private key not found in localStorage.");
+                return;
+            }
+
+            try {
+                const privateKey = await importPrivateKey(privateKeyBase64);
+                const decrypted = await decryptRSA(encryptedKey, privateKey);
+
+                // Show result and set value
+                decryptedInput.value = decrypted;
+                resultContainer.classList.remove("hidden");
+            } catch (err) {
+                console.error("Decryption failed:", err);
+                errorContainer.classList.remove("hidden");
+            }
+        });
+
+        copyBtn.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(decryptedInput.value);
+                copyBtn.textContent = "Copied!";
+                setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+            } catch (err) {
+                console.error("Copy failed:", err);
+                alert("Failed to copy the key.");
+            }
+        });
+    });
+</script>
+</body>
+</html>
