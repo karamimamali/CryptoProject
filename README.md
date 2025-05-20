@@ -6,7 +6,7 @@
 **Description:**  
 This app was developed as the final project for a Cryptography Course. It consists of a RESTful Java Spring API backend and a classic frontend built with HTML, CSS, JavaScript, and Tailwind CSS. The application implements JWT for authentication and authorization to ensure security. The project simulates a comprehensive key distribution system, showcasing practical applications of cryptographic principles in a secure messaging environment. We adopted a simple horizontal architecture in the back-end and focused on maintaining clean code despite the limited development timeframe.
 
-![Crypto Chat Overview](https://placeholder.com/crypto-chat-overview)
+![Crypto Chat Overview](assets/Screenshot 2025-05-20 at 14.26.44.png)
 
 ## 2. Authentication System with JWT
 
@@ -40,7 +40,7 @@ We've integrated JWT authentication using Spring Security by implementing the fo
    - Protected endpoints (/users, /sessions, etc.) require valid tokens
    - Invalid or expired tokens result in 401/403 responses
 
-![JWT Authentication Architecture](https://placeholder.com/jwt-architecture)
+![JWT Authentication Architecture](assets/Screenshot 2025-05-20 at 14.37.49.png)
 
 ### Code Implementation (Example)
 
@@ -97,7 +97,7 @@ Our system implements a comprehensive key management approach:
      - A random Caesar cipher key for symmetric encryption
    - These keys are securely distributed using the users' public keys
 
-![Key Distribution System](https://placeholder.com/key-distribution)
+![Key Distribution System](assets/Screenshot 2025-05-20 at 14.42.37.png)
 
 ### Encryption Implementation
 
@@ -139,7 +139,7 @@ private PublicKey convertToPublicKey(String base64PublicKey) throws Exception {
    - All messages are encrypted/decrypted using this shared Caesar key
    - The communication remains secure as long as the session is active
 
-![Secure Messaging Process](https://placeholder.com/secure-messaging)
+![Secure Messaging Process](assets/Screenshot 2025-05-20 at 14.46.00.png)
 
 ## 4. System Architecture
 
@@ -164,7 +164,7 @@ private PublicKey convertToPublicKey(String base64PublicKey) throws Exception {
 - Public keys
 - Session metadata (without exposing sensitive cryptographic material)
 
-![System Architecture Diagram](https://placeholder.com/system-architecture)
+![System Architecture Diagram](assets/Screenshot 2025-05-20 at 14.53.47.png)
 
 ## 5. Improvements and Future Work
 
@@ -189,16 +189,16 @@ private PublicKey convertToPublicKey(String base64PublicKey) throws Exception {
 ## 6. Screenshots and Demos
 
 ### User Registration
-![User Registration](https://placeholder.com/user-registration)
+![User Registration](assets/Screenshot 2025-05-20 at 14.57.26.png)
 
 ### Dashboard
-![Dashboard](https://placeholder.com/dashboard)
+![Dashboard](assets/Screenshot 2025-05-20 at 15.10.17.png)
 
 ### Session Creation
-![Session Creation](https://placeholder.com/session-creation)
+![Session Creation](assets/Screenshot 2025-05-20 at 15.11.19.png)
 
 ### Chat Interface
-![Chat Interface](https://placeholder.com/chat-interface)
+![Chat Interface](assets/Screenshot 2025-05-20 at 15.12.06.png)
 
 ## 7. Conclusion
 
